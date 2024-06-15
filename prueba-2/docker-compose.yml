@@ -1,0 +1,44 @@
+version: '3.8'
+
+# Unificamos los dos docker-compose en uno solo
+# De esta forma, se puede ejecutar el comando docker-compose up en la carpeta raíz del proyecto
+# Y así se levantarán los servicios de frontend y backend
+
+services:
+  api:
+    build: ./backend # Cambiamos la ruta de la imagen a ./backend
+    volumes:
+      - ./backend:/usr/src/app/ # Cambiamos la ruta del volumen
+      - static:/src/app/static
+      - static:/src/app/media
+
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./backend/.env # Cambiamos la ruta del archivo .env
+    depends_on:
+      - db
+
+  db:
+    container_name: database-test
+    image: postgres:12.0-alpine
+    env_file: ./backend/.env.postgres # Cambiamos la ruta del archivo .env.postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  react:
+    container_name: react-test
+    build:
+      context: ./frontend # Cambiamos la ruta de la imagen a ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+
+volumes:
+  postgres_data:
+  static:
+  media:
