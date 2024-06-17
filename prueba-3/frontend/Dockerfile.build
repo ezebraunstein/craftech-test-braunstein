@@ -1,15 +1,15 @@
 # Dockerfile for building React app
 FROM node:17-alpine AS build
 
-# set working directory
+# Set working directory
 WORKDIR /app
 
-# install app dependencies
+# Install app dependencies
 COPY package.json ./
 RUN npm install 
 
-# add app
+# Add app
 COPY . ./
 
-# build the app
+# Build the app
 RUN npm run build

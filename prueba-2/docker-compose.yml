@@ -1,9 +1,5 @@
 version: '3.8'
 
-# Unificamos los dos docker-compose en uno solo
-# De esta forma, se puede ejecutar el comando docker-compose up en la carpeta raíz del proyecto
-# Y así se levantarán los servicios de frontend y backend
-
 services:
   api:
     build: ./backend # Cambiamos la ruta de la imagen a ./backend
