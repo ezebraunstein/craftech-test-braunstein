@@ -1,5 +1,19 @@
 # Despliegue en AWS EC2 + CI/CD GitHub Actions
 
+En este caso, vamos a trabajar con dos Dockerfile para el frontend. Uno llamado Dockerfile.build para levantar la app en React, y el segundo llamado Dockerfile.nginx para levantar el web server de Nginx. De esta forma, el output de la build de React es mostrado a través del puerto 80.
+
+Respecto al archivo docker-compose.yml, tenemos que hacer algunas modificaciones para llamar por separado a ambos servicios y construir los contenedores (frontend-build y nginx). 
+
+Para implementar el workflow de CI/CD, vamos a hacer uso del servicio GitHub Actions. Es necesario crear un directorio .github/workflows y dentro de este se debe ubicar el archivo .yml que describa el workflow correspondiente de CI/CD. 
+
+Dentro de este archivo es necesario especificar bajo que condiciones se va a ejecutar el CI/CD. Se pueden declarar ramas específicas del proyecto o rutas de archivos particulares. En nuestro caso, cada vez que se realice una modificación en el path del archivo index.html, se ejecutará el workflow. 
+
+Es importante recalcar que, en este caso, una única y primera vez antes de hacer el deploy, debemos buildear y pushear las imágenes del frontend y backend a Docker Hub manualmente. 
+
+Una vez ejecutado el workflow, este va a seguir una serie de pasos determinados en el archivo .yml, como logearse en Docker Hub, construir y pushear las últimas imágenes con los cambios realizados, y establecer una conexión SSH con la instancia EC2.
+
+Una vez logeado dentro de la instancia, se realiza un pull del repositorio de git, se ejecuta un docker-compose pull y finalmente se construyen las imágenes. 
+
 # ACTUALMENTE LA APP (vPRUEBA-3) ESTÁ DEPLOYADA EN http://54.89.29.237
 
 1. Crear una instancia EC2 en AWS (Amazon Linux 2023 AMI, 64-bit (x86), t2.small, permitir tráfico SSH y HTTP)
